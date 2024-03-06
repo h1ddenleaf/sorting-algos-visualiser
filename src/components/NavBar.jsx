@@ -1,32 +1,21 @@
-import { useState } from "react";
+import PropTypes from "prop-types";
+import Slider from "./Slider";
 
-const NavBar = () => {
+const NavBar = ({ sliders, onSliderChange }) => {
+  const handleChange = (event) => {
+    const value = parseInt(event.target.value);
+    onSliderChange("sizeSlider", value);
+  };
   return (
     <div className="nav-bar">
-      <Slider />
+      <Slider value={sliders.sizeSlider} handleChange={handleChange} />
     </div>
   );
 };
 
+NavBar.propTypes = {
+  sliders: PropTypes.object.isRequired,
+  onSliderChange: PropTypes.func.isRequired,
+};
+
 export default NavBar;
-
-function Slider() {
-  const [value, setValue] = useState(150); // Initial value of the slider
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
-
-  return (
-    <div>
-      <input
-        type="range"
-        min="0"
-        max="300"
-        value={value}
-        onChange={handleChange}
-      />
-      <p>Value: {value}</p>
-    </div>
-  );
-}
