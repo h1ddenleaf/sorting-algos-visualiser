@@ -1,0 +1,40 @@
+.slider-container {
+  margin: 10px;
+  width: 20vw;
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.slider {
+  width: 100%;
+  height: 3px;
+  appearance: none;
+  background: #d3d3d3;
+  outline: none;
+  border-radius: 5px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #4caf50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #4caf50;
+  cursor: pointer;
+}
+
+.slider-value {
+  text-align: center;
+  font-size: 25px;
+  margin: 10px;
+}

@@ -1,24 +1,32 @@
-import PropTypes from "prop-types"; // Import PropTypes
+import PropTypes from "prop-types";
+import "./Slider.css";
 
-function Slider({ value, handleChange }) {
+const Slider = ({ value, handleChange, text }) => {
+  const handleSliderChange = (event) => {
+    const value = parseInt(event.target.value);
+    handleChange(value);
+  };
+
   return (
-    <div>
+    <div className="slider-container">
       <input
         type="range"
         min="10"
-        max="250"
+        max="200"
         value={value}
-        onChange={handleChange}
+        onChange={handleSliderChange}
+        className="slider"
       />
-      <p>Value: {value}</p>
+      <p className="slider-value">{text}</p>
     </div>
   );
-}
+};
 
 // PropTypes validation
 Slider.propTypes = {
   value: PropTypes.number.isRequired,
   handleChange: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
 };
 
 export default Slider;

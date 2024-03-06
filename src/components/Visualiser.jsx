@@ -17,6 +17,7 @@ export default class Visualiser extends React.Component {
       sortingState: null,
       algorithmKey: "bubbleSort",
       selectedAlgorithm: "",
+      isSorting: false,
     };
     this.arrayContainerRef = React.createRef();
   }
@@ -28,7 +29,15 @@ export default class Visualiser extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.sliders.sizeSlider !== prevProps.sliders.sizeSlider) {
       this.resetArray();
+    } else if (
+      this.props.sliders.speedSlider !== prevProps.sliders.speedSlider
+    ) {
+      this.stopSorting();
     }
+  }
+
+  componentWillUnmount() {
+    this.stopSorting();
   }
 
   setSortingState(newState) {
@@ -36,13 +45,32 @@ export default class Visualiser extends React.Component {
   }
 
   sort() {
-    const { sortingState, generator } = this.state;
-    if (sortingState && !sortingState.done) {
-      this.setSortingState(generator.next());
+    const { generator, isSorting } = this.state;
+    const sortSpeed = this.props.sliders.speedSlider;
+    if (!isSorting) {
+      this.setState({ isSorting: true });
+      this.sortingInterval = setInterval(() => {
+        const currSState = this.state.sortingState;
+        if (currSState && !currSState.done) {
+          if (generator.next().done === true) {
+            this.stopSorting();
+          } else {
+            this.setSortingState(generator.next());
+          }
+        }
+      }, 225 - sortSpeed);
+    } else {
+      this.stopSorting();
     }
   }
 
+  stopSorting() {
+    clearInterval(this.sortingInterval);
+    this.setState({ isSorting: false });
+  }
+
   resetArray() {
+    this.stopSorting();
     const { sliders } = this.props;
     NUMBER_OF_BARS = sliders.sizeSlider;
     const arrayContainer = this.arrayContainerRef.current;
@@ -59,11 +87,10 @@ export default class Visualiser extends React.Component {
   }
 
   render() {
-    const { sortingState } = this.state;
+    const { sortingState, isSorting } = this.state;
     const { result: array = [], colours = {} } = sortingState?.value || {};
     const swapIndices = colours.swapIndices || [];
     const colors = colours.colors || [];
-
     return (
       <div>
         <div className="array-container" ref={this.arrayContainerRef}>
@@ -85,7 +112,9 @@ export default class Visualiser extends React.Component {
           })}
         </div>
         <div className="algorithm-buttons">
-          <button onClick={() => this.sort()}>Sort</button>
+          <button onClick={() => this.sort()}>
+            {isSorting ? "Stop Sorting" : "Sort"}
+          </button>
 
           {Object.entries(algorithmNames).map(([key, name]) => (
             <button
@@ -93,6 +122,7 @@ export default class Visualiser extends React.Component {
               onClick={() => {
                 this.setState({ algorithmKey: key });
                 this.resetArray();
+                this.stopSorting();
               }}
               style={{
                 backgroundColor:
