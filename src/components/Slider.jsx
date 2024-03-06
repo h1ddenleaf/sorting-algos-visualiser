@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import "./Slider.css";
+import "../style/Slider.css";
 
 const Slider = ({ value, handleChange, text }) => {
   const handleSliderChange = (event) => {

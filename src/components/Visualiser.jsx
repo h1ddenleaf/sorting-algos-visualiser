@@ -1,6 +1,6 @@
 import React from "react";
 import { randArray } from "../util/VisualiserHelpers";
-import "./Visualiser.css";
+import "../style/Visualiser.css";
 import PropTypes from "prop-types";
 import { algorithms, algorithmNames } from "../algorithms/algorithmConsts";
 
